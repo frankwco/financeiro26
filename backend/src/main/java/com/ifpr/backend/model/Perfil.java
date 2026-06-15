@@ -19,7 +19,7 @@ public class Perfil {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "Descrição Obrigatório")
+    @NotBlank(message = "{descricao.obrigatorio}")
     private String descricao;
 
 }
