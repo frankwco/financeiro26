@@ -1,0 +1,12 @@
+.pagina-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.conteudo-dashboard {
+  width: 100%;
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 16px;
+}

@@ -1,0 +1,51 @@
+.pagina-autenticacao {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.cartao-autenticacao {
+  width: 100%;
+  max-width: 420px;
+}
+
+.formulario-autenticacao {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formulario-autenticacao .p-float-label {
+  display: block;
+  width: 100%;
+}
+
+.formulario-autenticacao .p-inputtext,
+.formulario-autenticacao .p-password,
+.formulario-autenticacao .p-password-input {
+  width: 100%;
+}
+
+.formulario-autenticacao .p-password {
+  display: block;
+}
+
+.formulario-autenticacao .p-password .p-inputtext,
+.formulario-autenticacao .p-password .p-password-input {
+  width: 100%;
+}
+
+.links-autenticacao {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.links-autenticacao a {
+  text-decoration: none;
+  color: #1e5fcf;
+  font-size: 0.95rem;
+}

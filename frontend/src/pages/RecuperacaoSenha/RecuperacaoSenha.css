@@ -1,4 +1,4 @@
-.auth-page {
+.pagina-autenticacao {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -6,39 +6,26 @@
   padding: 24px;
 }
 
-.auth-card {
+.cartao-autenticacao {
   width: 100%;
   max-width: 420px;
 }
 
-.auth-form {
+.formulario-autenticacao {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.auth-links {
+.links-autenticacao {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-.auth-links a {
+.links-autenticacao a {
   text-decoration: none;
   color: #1e5fcf;
   font-size: 0.95rem;
-}
-
-.dashboard-page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.dashboard-content {
-  width: 100%;
-  max-width: 900px;
-  margin: 32px auto;
-  padding: 0 16px;
 }

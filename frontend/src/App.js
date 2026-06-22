@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import RotaPrivada from './components/PrivateRoute/PrivateRoute';
+import Dashboard from './pages/Dashboard/Dashboard';
+import RecuperacaoSenha from './pages/RecuperacaoSenha/RecuperacaoSenha';
+import Login from './pages/Login/Login';
+import Cadastro from './pages/Cadastro/Cadastro';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/recuperar-senha" element={<RecuperacaoSenha />} />
+      <Route path="/novo-cadastro" element={<Cadastro />} />
+      <Route
+        path="/dashboard"
+        element={
+          <RotaPrivada>
+            <Dashboard />
+          </RotaPrivada>
+        }
+      />
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }
 
