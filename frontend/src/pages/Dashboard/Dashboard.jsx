@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'primereact/card';
 import { Tag } from 'primereact/tag';
 import AppMenu from '../../components/AppMenu/AppMenu';
-import { obterUsuarioAtual } from '../../services/authService';
+import { obterUsuarioAtual } from '../../services/AutenticacaoService';
 import './Dashboard.css';
 
 const Dashboard = () => {

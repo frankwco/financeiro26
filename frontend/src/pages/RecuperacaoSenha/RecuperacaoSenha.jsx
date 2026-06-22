@@ -4,7 +4,7 @@ import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Message } from 'primereact/message';
-import { recuperarSenha } from '../../services/authService';
+import { recuperarSenha } from '../../services/AutenticacaoService';
 import './RecuperacaoSenha.css';
 
 const RecuperacaoSenha = () => {

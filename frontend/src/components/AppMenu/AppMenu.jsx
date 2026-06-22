@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menubar } from 'primereact/menubar';
 import { useNavigate } from 'react-router-dom';
-import { sairDaConta } from '../../services/authService';
+import { sairDaConta } from '../../services/AutenticacaoService';
 
 const AppMenu = () => {
   const navigate = useNavigate();

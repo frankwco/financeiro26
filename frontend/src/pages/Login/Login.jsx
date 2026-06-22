@@ -5,7 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Message } from 'primereact/message';
-import { fazerLogin } from '../../services/authService';
+import { fazerLogin } from '../../services/AutenticacaoService';
 import './Login.css';
 
 const Login = () => {

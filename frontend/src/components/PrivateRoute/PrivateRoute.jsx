@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { estaAutenticado } from '../../services/authService';
+import { estaAutenticado } from '../../services/AutenticacaoService';
 
 const RotaPrivada = ({ children }) => {
   if (!estaAutenticado()) {

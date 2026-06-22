@@ -5,7 +5,10 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Message } from 'primereact/message';
+import UsuarioService from '../../services/UsuarioService';
 import './Cadastro.css';
+
+const usuarioService = new UsuarioService();
 
 const Cadastro = () => {
   const navigate = useNavigate();
@@ -14,17 +17,43 @@ const Cadastro = () => {
   const [senha, setSenha] = useState('');
   const [confirmacaoSenha, setConfirmacaoSenha] = useState('');
   const [erro, setErro] = useState('');
+  const [sucesso, setSucesso] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  const realizarCadastro = (event) => {
+  const realizarCadastro = async (event) => {
     event.preventDefault();
     setErro('');
+    setSucesso('');
 
     if (senha !== confirmacaoSenha) {
       setErro('A confirmacao de senha nao confere.');
       return;
     }
 
-    navigate('/login');
+    try {
+      setCarregando(true);
+
+      const dados = {
+        nome,
+        email,
+        senha,
+      };
+
+      await usuarioService.inserir(dados);
+      setSucesso('Cadastro realizado com sucesso.');
+      
+      setNome("");
+      setEmail("");
+      setSenha("");
+      setConfirmacaoSenha("");
+    } catch (erroCadastro) {
+      const mensagem =
+        erroCadastro?.response?.data?.mensagem ||
+        'Nao foi possivel realizar o cadastro.';
+      setErro(mensagem);
+    } finally {
+      setCarregando(false);
+    }
   };
 
   return (
@@ -78,8 +107,14 @@ const Cadastro = () => {
           </span>
 
           {erro && <Message severity="error" text={erro} />}
+          {sucesso && <Message severity="success" text={sucesso} />}
 
-          <Button type="submit" label="Cadastrar" className="w-full" />
+          <Button
+            type="submit"
+            label="Cadastrar"
+            className="w-full"
+            loading={carregando}
+          />
 
           <div className="links-autenticacao">
             <Link to="/login">Voltar para login</Link>

@@ -1,3 +1,6 @@
+
+//PROVISÓRIO
+
 const CHAVE_TOKEN = 'app-token';
 const EMAIL_FIXO = 'frankwco@gmail.com';
 const SENHA_FIXA = '123';
@@ -6,9 +9,6 @@ const USUARIO_FIXO = {
   email: EMAIL_FIXO,
 };
 
-export const cadastrarUsuario = () => {
-  return true;
-};
 
 export const fazerLogin = ({ email, senha }) => {
   const emailNormalizado = email.trim().toLowerCase();
