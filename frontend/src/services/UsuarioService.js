@@ -4,6 +4,7 @@ class UsuarioService extends BaseService {
   constructor() {
     super('/usuario');
   }
+  
 }
 
 export default UsuarioService;

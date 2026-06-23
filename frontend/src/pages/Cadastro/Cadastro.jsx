@@ -12,10 +12,7 @@ const usuarioService = new UsuarioService();
 
 const Cadastro = () => {
   const navigate = useNavigate();
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmacaoSenha, setConfirmacaoSenha] = useState('');
+  const [usuario, setUsuario] = useState({nome:'', email: '', senha: '', confirmacaoSenha:''});
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
   const [carregando, setCarregando] = useState(false);
@@ -25,27 +22,15 @@ const Cadastro = () => {
     setErro('');
     setSucesso('');
 
-    if (senha !== confirmacaoSenha) {
+    if (usuario.senha !== usuario.confirmacaoSenha) {
       setErro('A confirmacao de senha nao confere.');
       return;
-    }
-
-    try {
+    }    
       setCarregando(true);
-
-      const dados = {
-        nome,
-        email,
-        senha,
-      };
-
-      await usuarioService.inserir(dados);
+    try {
+      await usuarioService.inserir(usuario);
       setSucesso('Cadastro realizado com sucesso.');
       
-      setNome("");
-      setEmail("");
-      setSenha("");
-      setConfirmacaoSenha("");
     } catch (erroCadastro) {
       const mensagem =
         erroCadastro?.response?.data?.mensagem ||
@@ -54,7 +39,13 @@ const Cadastro = () => {
     } finally {
       setCarregando(false);
     }
+
   };
+
+  const handleChange = (e) =>{
+    setUsuario({...usuario,[e.target.name]:e.target.value});
+  }
+
 
   return (
     <div className="pagina-autenticacao">
@@ -63,8 +54,9 @@ const Cadastro = () => {
           <span className="p-float-label">
             <InputText
               id="register-name"
-              value={nome}
-              onChange={(event) => setNome(event.target.value)}
+              name="nome"
+              value={usuario.nome}
+              onChange={handleChange}
               className="w-full"
             />
             <label htmlFor="register-name">Nome</label>
@@ -73,8 +65,9 @@ const Cadastro = () => {
           <span className="p-float-label">
             <InputText
               id="register-email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              name="email"
+              value={usuario.email}
+              onChange={handleChange}
               className="w-full"
             />
             <label htmlFor="register-email">Email</label>
@@ -83,8 +76,9 @@ const Cadastro = () => {
           <span className="p-float-label">
             <Password
               id="register-password"
-              value={senha}
-              onChange={(event) => setSenha(event.target.value)}
+              name="senha"
+              value={usuario.senha}
+              onChange={handleChange}
               feedback={false}
               toggleMask
               className="w-full"
@@ -96,8 +90,9 @@ const Cadastro = () => {
           <span className="p-float-label">
             <Password
               id="register-confirm-password"
-              value={confirmacaoSenha}
-              onChange={(event) => setConfirmacaoSenha(event.target.value)}
+              name="confirmacaoSenha"
+              value={usuario.confirmacaoSenha}
+              onChange={handleChange}
               feedback={false}
               toggleMask
               className="w-full"
