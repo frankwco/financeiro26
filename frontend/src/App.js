@@ -4,14 +4,14 @@ import RotaPrivada from './components/PrivateRoute/PrivateRoute';
 import Dashboard from './pages/Dashboard/Dashboard';
 import RecuperacaoSenha from './pages/RecuperacaoSenha/RecuperacaoSenha';
 import Login from './pages/Login/Login';
-import Cadastro from './pages/Cadastro/Cadastro';
+import CadastroUsuario from './pages/CadastroUsuario/CadastroUsuario';
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/recuperar-senha" element={<RecuperacaoSenha />} />
-      <Route path="/novo-cadastro" element={<Cadastro />} />
+      <Route path="/novo-cadastro" element={<CadastroUsuario />} />
       <Route
         path="/dashboard"
         element={

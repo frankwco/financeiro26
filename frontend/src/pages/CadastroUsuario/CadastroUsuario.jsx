@@ -6,11 +6,11 @@ import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { Message } from 'primereact/message';
 import UsuarioService from '../../services/UsuarioService';
-import './Cadastro.css';
+import './CadastroUsuario.css';
 
 const usuarioService = new UsuarioService();
 
-const Cadastro = () => {
+const CadastroUsuario = () => {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState({nome:'', email: '', senha: '', confirmacaoSenha:''});
   const [erro, setErro] = useState('');
@@ -120,4 +120,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default CadastroUsuario;
