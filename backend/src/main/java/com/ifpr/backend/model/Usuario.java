@@ -1,9 +1,19 @@
 package com.ifpr.backend.model;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,8 +27,8 @@ import lombok.Setter;
 
 @Entity
 @Data
-public class Usuario {
-    
+public class Usuario implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,9 +37,10 @@ public class Usuario {
     private String nome;
     @Email(message = "Insira um email válido")
     private String email;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String senha;
-    @OneToMany(mappedBy = "usuario", 
-    cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "usuario",
+    cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Setter(value = AccessLevel.NONE)
     private List<UsuarioPerfil> usuarioPerfil;
 
@@ -40,5 +51,26 @@ public class Usuario {
             }
         }
         this.usuarioPerfil = usuariosPerfis;
+    }
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (usuarioPerfil == null) {
+            return List.of();
+        }
+        return usuarioPerfil.stream()
+                .map(up -> new SimpleGrantedAuthority(up.getPerfil().getDescricao()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 }

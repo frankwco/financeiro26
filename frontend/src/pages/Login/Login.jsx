@@ -14,12 +14,12 @@ const Login = () => {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
-  const realizarLogin = (event) => {
+  const realizarLogin = async (event) => {
     event.preventDefault();
     setErro('');
 
     try {
-      fazerLogin({ email, senha });
+      await fazerLogin({ email, senha });
       navigate('/dashboard');
     } catch (erroLogin) {
       setErro(erroLogin.message);

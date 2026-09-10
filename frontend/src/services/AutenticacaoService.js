@@ -1,41 +1,25 @@
+import api from '../configs/axiosConfig';
 
-//PROVISÓRIO
+const CHAVE_USUARIO = 'usuario';
 
-const CHAVE_TOKEN = 'app-token';
-const EMAIL_FIXO = 'frankwco@gmail.com';
-const SENHA_FIXA = '123';
-const USUARIO_FIXO = {
-  nome: 'Frank',
-  email: EMAIL_FIXO,
-};
-
-
-export const fazerLogin = ({ email, senha }) => {
-  const emailNormalizado = email.trim().toLowerCase();
-  const senhaInformada = String(senha).trim();
-
-  if (emailNormalizado !== EMAIL_FIXO || senhaInformada !== SENHA_FIXA) {
+export const fazerLogin = async ({ email, senha }) => {
+  try {
+    const resposta = await api.post('/autenticacao/login', { email, senha });
+    localStorage.setItem(CHAVE_USUARIO, JSON.stringify(resposta.data));
+    return resposta.data;
+  } catch (erro) {
     throw new Error('Email ou senha invalidos.');
   }
-
-  localStorage.setItem(CHAVE_TOKEN, 'token-fixo');
-  return 'token-fixo';
 };
 
 export const recuperarSenha = (email) => {
-  const emailNormalizado = email.trim().toLowerCase();
-
-  if (emailNormalizado !== EMAIL_FIXO) {
-    throw new Error('Use o email frankwco@gmail.com.');
-  }
-
-  return 'Sua senha e 123.';
+  throw new Error('Recuperacao de senha ainda nao disponivel.');
 };
 
 export const sairDaConta = () => {
-  localStorage.removeItem(CHAVE_TOKEN);
+  localStorage.removeItem(CHAVE_USUARIO);
 };
 
-export const estaAutenticado = () => Boolean(localStorage.getItem(CHAVE_TOKEN));
+export const estaAutenticado = () => Boolean(localStorage.getItem(CHAVE_USUARIO));
 
-export const obterUsuarioAtual = () => USUARIO_FIXO;
+export const obterUsuarioAtual = () => JSON.parse(localStorage.getItem(CHAVE_USUARIO) || 'null');
