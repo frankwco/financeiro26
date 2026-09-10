@@ -16,8 +16,14 @@ export const recuperarSenha = (email) => {
   throw new Error('Recuperacao de senha ainda nao disponivel.');
 };
 
-export const sairDaConta = () => {
-  localStorage.removeItem(CHAVE_USUARIO);
+export const sairDaConta = async () => {
+  try {
+    await api.post('/autenticacao/logout');
+  } catch (erro) {
+    // mesmo se a chamada falhar, a sessao local eh encerrada abaixo
+  } finally {
+    localStorage.removeItem(CHAVE_USUARIO);
+  }
 };
 
 export const estaAutenticado = () => Boolean(localStorage.getItem(CHAVE_USUARIO));

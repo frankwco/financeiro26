@@ -15,8 +15,8 @@ const AppMenu = () => {
     {
       label: 'Sair',
       icon: 'pi pi-sign-out',
-      command: () => {
-        sairDaConta();
+      command: async () => {
+        await sairDaConta();
         navigate('/login');
       },
     },
