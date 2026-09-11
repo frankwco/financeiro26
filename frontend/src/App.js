@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import RecuperacaoSenha from './pages/RecuperacaoSenha/RecuperacaoSenha';
 import Login from './pages/Login/Login';
 import CadastroUsuario from './pages/CadastroUsuario/CadastroUsuario';
+import Lancamentos from './pages/Lancamentos/Lancamentos';
 
 function App() {
   return (
@@ -17,6 +18,14 @@ function App() {
         element={
           <RotaPrivada>
             <Dashboard />
+          </RotaPrivada>
+        }
+      />
+      <Route
+        path="/lancamentos"
+        element={
+          <RotaPrivada>
+            <Lancamentos />
           </RotaPrivada>
         }
       />

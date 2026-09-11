@@ -13,6 +13,11 @@ const AppMenu = () => {
       command: () => navigate('/dashboard'),
     },
     {
+      label: 'Lançamentos',
+      icon: 'pi pi-wallet',
+      command: () => navigate('/lancamentos'),
+    },
+    {
       label: 'Sair',
       icon: 'pi pi-sign-out',
       command: async () => {

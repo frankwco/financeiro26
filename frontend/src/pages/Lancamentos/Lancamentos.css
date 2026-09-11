@@ -1,0 +1,49 @@
+.pagina-lancamentos {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.conteudo-lancamentos {
+  width: 100%;
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.resumo-saldo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.formulario-lancamento {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.formulario-lancamento .campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formulario-lancamento label {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.acoes-formulario {
+  display: flex;
+  gap: 8px;
+}
+
+.acoes-tabela {
+  display: flex;
+  gap: 8px;
+}
