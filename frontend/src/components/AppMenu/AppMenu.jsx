@@ -18,6 +18,11 @@ const AppMenu = () => {
       command: () => navigate('/lancamentos'),
     },
     {
+      label: 'Todos os Lançamentos (Admin)',
+      icon: 'pi pi-shield',
+      command: () => navigate('/admin/lancamentos'),
+    },
+    {
       label: 'Sair',
       icon: 'pi pi-sign-out',
       command: async () => {

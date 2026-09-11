@@ -11,6 +11,10 @@ import com.ifpr.backend.repository.LancamentoRepository;
 import com.ifpr.backend.repository.UsuarioRepository;
 import com.ifpr.backend.security.AuthUsuarioProvider;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+
 @Service
 public class LancamentoService {
 
@@ -22,6 +26,9 @@ public class LancamentoService {
 
     @Autowired
     private AuthUsuarioProvider authUsuarioProvider;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public Lancamento inserir(Lancamento lancamento) {
         // [LAB] proposital: se o cliente mandar um "usuario" no corpo da requisição,
@@ -67,5 +74,29 @@ public class LancamentoService {
         // [LAB] proposital: idem — remove qualquer id, de qualquer dono.
         Lancamento lancamento = buscarPorId(id);
         repository.delete(lancamento);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Lancamento> buscarPorDescricao(String termo) {
+        Usuario usuarioLogado = authUsuarioProvider.getUsuarioAutenticado();
+
+        // [LAB] proposital: consulta nativa montada por concatenação de string em vez
+        // de parâmetro (?1/:termo). O "termo" digitado pelo usuário vai direto para o
+        // SQL, permitindo injeção — inclusive para escapar do filtro id_usuario abaixo.
+        String sql = "SELECT * FROM lancamento WHERE id_usuario = " + usuarioLogado.getId()
+                + " AND descricao LIKE '%" + termo + "%'";
+
+        Query query = entityManager.createNativeQuery(sql, Lancamento.class);
+        return query.getResultList();
+    }
+
+    public List<Lancamento> listarTodos() {
+        // Uso administrativo: ver os lançamentos de todos os usuários do sistema.
+        // Protegido em LancamentoController com @PreAuthorize("hasAuthority('ADMIN')").
+        return repository.findAll();
+    }
+
+    public Lancamento salvarComprovante(Lancamento lancamento) {
+        return repository.save(lancamento);
     }
 }

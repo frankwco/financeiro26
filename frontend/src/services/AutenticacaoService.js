@@ -12,8 +12,21 @@ export const fazerLogin = async ({ email, senha }) => {
   }
 };
 
-export const recuperarSenha = (email) => {
-  throw new Error('Recuperacao de senha ainda nao disponivel.');
+export const solicitarRecuperacaoSenha = async (email) => {
+  try {
+    const resposta = await api.post('/autenticacao/recuperar-senha', { email });
+    return resposta.data;
+  } catch (erro) {
+    throw new Error('Nao foi possivel solicitar a recuperacao de senha.');
+  }
+};
+
+export const redefinirSenha = async ({ email, token, novaSenha }) => {
+  try {
+    await api.post('/autenticacao/redefinir-senha', { email, token, novaSenha });
+  } catch (erro) {
+    throw new Error('Codigo invalido ou expirado.');
+  }
 };
 
 export const sairDaConta = async () => {

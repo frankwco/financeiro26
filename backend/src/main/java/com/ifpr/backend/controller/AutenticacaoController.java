@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ifpr.backend.dto.AutenticacaoResultado;
+import com.ifpr.backend.dto.RecuperacaoSenhaDTO;
+import com.ifpr.backend.dto.RedefinicaoSenhaDTO;
+import com.ifpr.backend.dto.SolicitacaoRecuperacaoDTO;
 import com.ifpr.backend.dto.UsuarioAutenticacaoDTO;
 import com.ifpr.backend.dto.UsuarioRequisicaoDTO;
 import com.ifpr.backend.service.AutenticacaoService;
+import com.ifpr.backend.service.RecuperacaoSenhaService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,6 +35,9 @@ public class AutenticacaoController {
 
     @Autowired
     private AutenticacaoService autenticacaoService;
+
+    @Autowired
+    private RecuperacaoSenhaService recuperacaoSenhaService;
 
     @Value("${jwt.refresh.expiration}")
     private long refreshExpiration;
@@ -69,6 +76,17 @@ public class AutenticacaoController {
             autenticacaoService.logout(refreshToken);
         }
         removerCookieRefreshToken(response);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity<RecuperacaoSenhaDTO> recuperarSenha(@RequestBody SolicitacaoRecuperacaoDTO solicitacao) {
+        return ResponseEntity.ok(recuperacaoSenhaService.solicitar(solicitacao.getEmail()));
+    }
+
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<Void> redefinirSenha(@RequestBody RedefinicaoSenhaDTO redefinicao) {
+        recuperacaoSenhaService.redefinir(redefinicao.getEmail(), redefinicao.getToken(), redefinicao.getNovaSenha());
         return ResponseEntity.noContent().build();
     }
 

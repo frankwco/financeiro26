@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Card } from 'primereact/card';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
@@ -27,11 +27,16 @@ const Lancamentos = () => {
   const [form, setForm] = useState(vazio);
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
+  const [termoBusca, setTermoBusca] = useState('');
+  const [buscaAtiva, setBuscaAtiva] = useState(false);
+  const fileInputRef = useRef(null);
+  const [lancamentoParaAnexar, setLancamentoParaAnexar] = useState(null);
 
   const carregar = async () => {
     try {
       const resposta = await lancamentoService.buscarTodos();
       setLancamentos(resposta.data);
+      setBuscaAtiva(false);
     } catch (erroCarregar) {
       setErro('Não foi possível carregar os lançamentos.');
     }
@@ -40,6 +45,23 @@ const Lancamentos = () => {
   useEffect(() => {
     carregar();
   }, []);
+
+  const buscar = async (event) => {
+    event.preventDefault();
+    setErro('');
+    try {
+      const resposta = await lancamentoService.buscarPorDescricao(termoBusca);
+      setLancamentos(resposta.data);
+      setBuscaAtiva(true);
+    } catch (erroBuscar) {
+      setErro('Não foi possível buscar os lançamentos.');
+    }
+  };
+
+  const limparBusca = () => {
+    setTermoBusca('');
+    carregar();
+  };
 
   const saldoDisponivel = (ignorarId = null) =>
     lancamentos
@@ -114,6 +136,42 @@ const Lancamentos = () => {
     }
   };
 
+  const abrirSeletorArquivo = (lancamento) => {
+    setLancamentoParaAnexar(lancamento.id);
+    fileInputRef.current.click();
+  };
+
+  const aoSelecionarArquivo = async (event) => {
+    const arquivo = event.target.files[0];
+    event.target.value = '';
+    if (!arquivo || !lancamentoParaAnexar) {
+      return;
+    }
+    try {
+      await lancamentoService.anexarComprovante(lancamentoParaAnexar, arquivo);
+      await carregar();
+    } catch (erroAnexar) {
+      setErro('Não foi possível anexar o comprovante.');
+    }
+  };
+
+  const baixarComprovante = async (linha) => {
+    if (!linha.comprovantePath) {
+      return;
+    }
+    try {
+      const resposta = await lancamentoService.baixarComprovante(linha.comprovantePath);
+      const url = window.URL.createObjectURL(resposta.data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = linha.comprovantePath;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (erroBaixar) {
+      setErro('Não foi possível baixar o comprovante.');
+    }
+  };
+
   const colunaValor = (linha) => (
     <span style={{ color: linha.tipo === 'RECEITA' ? '#2e7d32' : '#c62828' }}>
       {linha.tipo === 'DESPESA' ? '- ' : ''}R$ {Number(linha.valor).toFixed(2)}
@@ -131,12 +189,23 @@ const Lancamentos = () => {
     <div className="acoes-tabela">
       <Button icon="pi pi-pencil" rounded text onClick={() => editar(linha)} />
       <Button icon="pi pi-trash" rounded text severity="danger" onClick={() => excluir(linha)} />
+      <Button
+        icon="pi pi-paperclip"
+        rounded
+        text
+        severity={linha.comprovantePath ? 'success' : undefined}
+        onClick={() => abrirSeletorArquivo(linha)}
+      />
+      {linha.comprovantePath && (
+        <Button icon="pi pi-download" rounded text onClick={() => baixarComprovante(linha)} />
+      )}
     </div>
   );
 
   return (
     <div className="pagina-lancamentos">
       <AppMenu />
+      <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={aoSelecionarArquivo} />
       <div className="conteudo-lancamentos">
         <Card>
           <div className="resumo-saldo">
@@ -203,6 +272,18 @@ const Lancamentos = () => {
         </Card>
 
         <Card title="Meus lançamentos">
+          <form onSubmit={buscar} className="formulario-busca">
+            <InputText
+              placeholder="Buscar por descrição"
+              value={termoBusca}
+              onChange={(e) => setTermoBusca(e.target.value)}
+            />
+            <Button type="submit" label="Buscar" outlined />
+            {buscaAtiva && (
+              <Button type="button" label="Limpar busca" severity="secondary" text onClick={limparBusca} />
+            )}
+          </form>
+
           <DataTable value={lancamentos} emptyMessage="Nenhum lançamento cadastrado.">
             <Column field="descricao" header="Descrição" />
             <Column header="Valor" body={colunaValor} />

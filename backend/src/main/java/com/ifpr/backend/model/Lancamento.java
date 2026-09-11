@@ -34,6 +34,8 @@ public class Lancamento {
 
     private LocalDate data;
 
+    private String comprovantePath;
+
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     @JsonIgnoreProperties({ "usuarioPerfil" })
