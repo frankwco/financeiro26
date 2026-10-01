@@ -1,7 +1,6 @@
 package com.ifpr.backend.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,12 +49,12 @@ public class PerfilController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Perfil> buscarPorId
-         (@PathVariable("id") UUID id){
+         (@PathVariable("id") Long id){
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable("id") UUID id){
+    public ResponseEntity<Void> remover(@PathVariable("id") Long id){
         service.remover(id);
         return ResponseEntity.noContent().build();
     }

@@ -1,7 +1,6 @@
 package com.ifpr.backend.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +24,13 @@ public class PerfilService {
         return repository.findAll();
     }
 
-    public Perfil buscarPorId(UUID id){
+    public Perfil buscarPorId(Long id){
         Perfil perfil = repository.findById(id).orElseThrow(()
                 ->new RuntimeException("Perfil não encontrado!!"));
         return perfil;
     }
 
-    public void remover(UUID id){
+    public void remover(Long id){
         Perfil usuario = buscarPorId(id);
         repository.delete(usuario);
     }
