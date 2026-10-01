@@ -34,7 +34,12 @@ public class JwtFiltroAutenticacao extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
-            username = jwtService.extractUsername(token);
+            try {
+                username = jwtService.extractUsername(token);
+            } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+                // Token expirado/invalido: segue sem autenticar (login e refresh continuam acessiveis)
+                logger.debug("Token JWT ignorado: " + e.getMessage());
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
