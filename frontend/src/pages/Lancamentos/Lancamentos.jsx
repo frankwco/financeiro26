@@ -47,8 +47,6 @@ const Lancamentos = () => {
     carregar();
   }, []);
 
-  // [SSE] Abre uma conexão longa com o backend; sempre que outro lugar (outra aba,
-  // outro dispositivo) alterar um lançamento do usuário, o servidor avisa e a lista recarrega.
   useEffect(() => {
     const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
     if (!usuario?.token) {
@@ -59,9 +57,9 @@ const Lancamentos = () => {
 
     fonte.addEventListener('conectado', () => setAoVivo(true));
     fonte.addEventListener('lancamento-alterado', () => carregar());
-    fonte.onerror = () => setAoVivo(false); // o navegador tenta reconectar sozinho
+    fonte.onerror = () => setAoVivo(false); 
 
-    return () => fonte.close(); // fecha ao sair da tela
+    return () => fonte.close();
   }, []);
 
   const buscar = async (event) => {

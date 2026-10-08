@@ -48,7 +48,9 @@ public class LancamentoService {
         // [LAB] proposital: nenhuma verificação de negócio aqui (valor > 0, tipo
         // condizente com o sinal, limite de saldo). Tudo isso só existe no frontend.
         Lancamento salvo = repository.save(lancamento);
-        eventos.notificar(salvo.getUsuario().getId(), "inserido"); // [SSE]
+       
+        eventos.notificar(salvo.getUsuario().getId(), "inserido"); 
+        
         return salvo;
     }
 
@@ -73,7 +75,9 @@ public class LancamentoService {
         lancamentoDB.setTipo(lancamento.getTipo());
         lancamentoDB.setData(lancamento.getData());
         Lancamento salvo = repository.save(lancamentoDB);
-        eventos.notificar(salvo.getUsuario().getId(), "alterado"); // [SSE]
+        
+        eventos.notificar(salvo.getUsuario().getId(), "alterado"); 
+        
         return salvo;
     }
 
@@ -81,7 +85,7 @@ public class LancamentoService {
         // [LAB] proposital: idem — remove qualquer id, de qualquer dono.
         Lancamento lancamento = buscarPorId(id);
         repository.delete(lancamento);
-        eventos.notificar(lancamento.getUsuario().getId(), "removido"); // [SSE]
+        eventos.notificar(lancamento.getUsuario().getId(), "removido"); 
     }
 
     @SuppressWarnings("unchecked")

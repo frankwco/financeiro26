@@ -50,7 +50,6 @@ public class LancamentoController {
     @Autowired
     private AuthUsuarioProvider authUsuarioProvider;
 
-    // [SSE] Conexão longa: o navegador abre e o servidor vai empurrando eventos.
     @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream() {
         return eventos.registrar(authUsuarioProvider.getUsuarioAutenticado().getId());
