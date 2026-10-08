@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.ifpr.backend.model.Lancamento;
+import com.ifpr.backend.security.AuthUsuarioProvider;
+import com.ifpr.backend.service.LancamentoEventosService;
 import com.ifpr.backend.service.LancamentoService;
 
 import jakarta.validation.Valid;
@@ -39,6 +43,18 @@ public class LancamentoController {
 
     @Autowired
     private LancamentoService service;
+
+    @Autowired
+    private LancamentoEventosService eventos;
+
+    @Autowired
+    private AuthUsuarioProvider authUsuarioProvider;
+
+    // [SSE] Conexão longa: o navegador abre e o servidor vai empurrando eventos.
+    @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter stream() {
+        return eventos.registrar(authUsuarioProvider.getUsuarioAutenticado().getId());
+    }
 
     @GetMapping
     public ResponseEntity<List<Lancamento>> listar() {

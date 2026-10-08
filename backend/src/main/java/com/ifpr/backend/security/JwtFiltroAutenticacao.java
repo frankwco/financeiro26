@@ -42,6 +42,17 @@ public class JwtFiltroAutenticacao extends OncePerRequestFilter {
             }
         }
 
+        // [SSE] EventSource do navegador não consegue enviar o header Authorization,
+        // então para o stream (e só para ele) aceitamos o token na query string.
+        if (token == null && request.getRequestURI().endsWith("/lancamento/stream")) {
+            token = request.getParameter("token");
+            try {
+                username = token != null ? jwtService.extractUsername(token) : null;
+            } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
+                logger.debug("Token JWT (stream) ignorado: " + e.getMessage());
+            }
+        }
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var userDetails = usuarioService.loadUserByUsername(username);
             if (jwtService.validateToken(token, userDetails.getUsername())) {

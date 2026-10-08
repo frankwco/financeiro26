@@ -27,6 +27,9 @@ public class LancamentoService {
     @Autowired
     private AuthUsuarioProvider authUsuarioProvider;
 
+    @Autowired
+    private LancamentoEventosService eventos;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -44,7 +47,9 @@ public class LancamentoService {
 
         // [LAB] proposital: nenhuma verificação de negócio aqui (valor > 0, tipo
         // condizente com o sinal, limite de saldo). Tudo isso só existe no frontend.
-        return repository.save(lancamento);
+        Lancamento salvo = repository.save(lancamento);
+        eventos.notificar(salvo.getUsuario().getId(), "inserido"); // [SSE]
+        return salvo;
     }
 
     public List<Lancamento> listarMeusLancamentos() {
@@ -67,13 +72,16 @@ public class LancamentoService {
         lancamentoDB.setValor(lancamento.getValor());
         lancamentoDB.setTipo(lancamento.getTipo());
         lancamentoDB.setData(lancamento.getData());
-        return repository.save(lancamentoDB);
+        Lancamento salvo = repository.save(lancamentoDB);
+        eventos.notificar(salvo.getUsuario().getId(), "alterado"); // [SSE]
+        return salvo;
     }
 
     public void remover(Long id) {
         // [LAB] proposital: idem — remove qualquer id, de qualquer dono.
         Lancamento lancamento = buscarPorId(id);
         repository.delete(lancamento);
+        eventos.notificar(lancamento.getUsuario().getId(), "removido"); // [SSE]
     }
 
     @SuppressWarnings("unchecked")

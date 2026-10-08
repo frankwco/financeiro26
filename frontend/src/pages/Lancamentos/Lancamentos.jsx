@@ -29,6 +29,7 @@ const Lancamentos = () => {
   const [carregando, setCarregando] = useState(false);
   const [termoBusca, setTermoBusca] = useState('');
   const [buscaAtiva, setBuscaAtiva] = useState(false);
+  const [aoVivo, setAoVivo] = useState(false);
   const fileInputRef = useRef(null);
   const [lancamentoParaAnexar, setLancamentoParaAnexar] = useState(null);
 
@@ -44,6 +45,23 @@ const Lancamentos = () => {
 
   useEffect(() => {
     carregar();
+  }, []);
+
+  // [SSE] Abre uma conexão longa com o backend; sempre que outro lugar (outra aba,
+  // outro dispositivo) alterar um lançamento do usuário, o servidor avisa e a lista recarrega.
+  useEffect(() => {
+    const usuario = JSON.parse(localStorage.getItem('usuario') || 'null');
+    if (!usuario?.token) {
+      return undefined;
+    }
+    const base = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8081';
+    const fonte = new EventSource(`${base}/lancamento/stream?token=${usuario.token}`);
+
+    fonte.addEventListener('conectado', () => setAoVivo(true));
+    fonte.addEventListener('lancamento-alterado', () => carregar());
+    fonte.onerror = () => setAoVivo(false); // o navegador tenta reconectar sozinho
+
+    return () => fonte.close(); // fecha ao sair da tela
   }, []);
 
   const buscar = async (event) => {
@@ -209,6 +227,11 @@ const Lancamentos = () => {
       <div className="conteudo-lancamentos">
         <Card>
           <div className="resumo-saldo">
+            <Tag
+              severity={aoVivo ? 'info' : 'warning'}
+              icon="pi pi-bolt"
+              value={aoVivo ? 'Tempo real: conectado' : 'Tempo real: desconectado'}
+            />
             <span>Saldo atual:</span>
             <Tag
               severity={saldoAtual >= 0 ? 'success' : 'danger'}
